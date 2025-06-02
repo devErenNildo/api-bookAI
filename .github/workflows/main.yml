@@ -30,7 +30,7 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: target/*.jar
-        target: /srv/http/api-bookAI/target
+        target: /srv/http/api-bookAI
 
     - name: SSH e reiniciar o serviço
       uses: appleboy/ssh-action@master
