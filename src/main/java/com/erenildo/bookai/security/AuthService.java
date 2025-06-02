@@ -1,6 +1,7 @@
 package com.erenildo.bookai.security;
 
 import com.erenildo.bookai.entity.Usuario;
+import com.erenildo.bookai.repository.UsuarioRepository;
 import com.erenildo.bookai.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,12 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Usuario> usuarioObtido = usuarioService.findByEmail(email);
-        return usuarioObtido
-                .orElseThrow(() -> new UsernameNotFoundException("usuário inválido"));
+        return usuarioRepository.findByEmail(email);
     }
 }

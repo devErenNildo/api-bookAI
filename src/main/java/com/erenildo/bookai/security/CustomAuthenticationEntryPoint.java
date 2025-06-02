@@ -19,13 +19,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletRequest request,
             HttpServletResponse response,
             AuthenticationException authException
-    ) throws IOException, ServletException {
+    ) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         Map<String, String> error = new HashMap<>();
 
         if(request.getRequestURI().contains("/auth")){
-            error.put("error", "CPF ou senha inválidos");
+            error.put("error", "email ou senha inválidos");
         } else {
             error.put("error", "Token JWT ausente");
         }

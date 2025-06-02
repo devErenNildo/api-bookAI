@@ -1,5 +1,6 @@
 package com.erenildo.bookai.dtos;
 
+import com.erenildo.bookai.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,5 +21,5 @@ public class UsuarioRequestDTO {
     @Size(min = 8, message = "Senha deve ter pelo menos 8 caracteres")
     private String senha;
 
-    private Set<Long> cargosIds;
+    private UserRole roles;
 }

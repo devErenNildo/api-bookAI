@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/auth")
+//@RequestMapping("/auth")
 public class UsuarioController {
 
 //    public ResponseEntity<UsuarioDTO> criarUsuario(UsuarioRequestDTO usuarioRequestDTODTO) {
 //
 //    }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> teste() {
-        return ResponseEntity.ok("teste");
-    }
-
-    @GetMapping("/teste")
-    public ResponseEntity<String> teste2() {
-        return ResponseEntity.ok("teste2");
-    }
-
-    @GetMapping("/teste1")
-    public ResponseEntity<String> teste3() {
-        return ResponseEntity.ok("teste3");
-    }
+//    @GetMapping("/login")
+//    public ResponseEntity<String> teste() {
+//        return ResponseEntity.ok("teste");
+//    }
+//
+//    @GetMapping("/teste")
+//    public ResponseEntity<String> teste2() {
+//        return ResponseEntity.ok("teste2");
+//    }
+//
+//    @GetMapping("/teste1")
+//    public ResponseEntity<String> teste3() {
+//        return ResponseEntity.ok("teste3");
+//    }
 }

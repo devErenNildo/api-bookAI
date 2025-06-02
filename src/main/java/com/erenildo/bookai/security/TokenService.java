@@ -1,18 +1,17 @@
 package com.erenildo.bookai.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.erenildo.bookai.entity.Usuario;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.Date;
-import java.util.List;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Service
 @RequiredArgsConstructor
@@ -25,45 +24,34 @@ public class TokenService {
     private String secret;
 
     public String generateToken(Usuario usuario) {
-            Date now = new Date();
-            Date exp = new Date(now.getTime() + Duration.ofHours(3).toMillis());
+        try{
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.create()
+                    .withIssuer("bookAI")
+                    .withSubject(usuario.getEmail())
+                    .withExpiresAt(genExpirationDate())
+                    .sign(algorithm);
 
-            List<String> cargos = usuario.getRoles().stream()
-                    .map(cargo -> "ROLE_" + cargo.getAuthority())
-                    .toList();
-            return Jwts.builder()
-                    .setIssuer("Book-AI")
-                    .claim(Claims.ID, usuario.getIdUsuario())
-                    .claim(CARGOS_CLAIM, cargos)
-                    .setIssuedAt(now)
-                    .setExpiration(exp)
-                    .signWith(SignatureAlgorithm.HS256, secret)
-                    .compact();
-    }
-
-    public UsernamePasswordAuthenticationToken isValid(String token) {
-        if (token != null) {
-            Claims body = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody();
-            String user = body.get(Claims.ID, String.class);
-            if (user != null) {
-                List<String> cargos = body.get(CARGOS_CLAIM, List.class);
-                List<SimpleGrantedAuthority> authorities = cargos.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
-                return new UsernamePasswordAuthenticationToken(user, null, authorities);
-            }
+        }catch (JWTCreationException exception){
+            throw new RuntimeException("Error while generating token", exception);
         }
-        return null;
     }
 
-    public String getUsername(String token){
-        return Jwts.parser()
-                .setSigningKey(secret)
-                .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                .getBody()
-                .get(Claims.ID, String.class);
+
+    public String validateToken(String token) {
+      try {
+          Algorithm algorithm = Algorithm.HMAC256(secret);
+          return JWT.require(algorithm)
+                  .withIssuer("auth-api")
+                  .build()
+                  .verify(token)
+                  .getSubject();
+      } catch (JWTVerificationException exception){
+          return "";
+      }
+    }
+
+    private Instant genExpirationDate(){
+        return LocalDateTime.now().plusHours(4).toInstant(ZoneOffset.of("-03:00"));
     }
 }
