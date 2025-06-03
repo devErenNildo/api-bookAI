@@ -1,9 +1,10 @@
 package com.erenildo.bookai.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,8 @@ import java.util.*;
 @Data
 @Entity
 @Table(name = "usuarios")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario implements UserDetails {
 
     @Id
@@ -23,7 +26,7 @@ public class Usuario implements UserDetails {
     private String nome;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String login;
 
     @Column(nullable = false)
     private String senha;
@@ -46,7 +49,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return login;
     }
 
     @Override

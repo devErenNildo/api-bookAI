@@ -1,12 +1,9 @@
 package com.erenildo.bookai.dtos;
 
-import com.erenildo.bookai.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 public class UsuarioRequestDTO {
