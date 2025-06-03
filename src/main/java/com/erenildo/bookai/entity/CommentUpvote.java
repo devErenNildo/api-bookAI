@@ -13,7 +13,7 @@ public class CommentUpvote {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario user;
+    private User user;
 
     @ManyToOne @JoinColumn(name = "id_comentario", nullable = false)
     private Comentario comment;

@@ -24,7 +24,7 @@ public class Comentario {
     private Book book;
 
     @ManyToOne @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario author;
+    private User author;
 
     @ManyToOne @JoinColumn(name = "id_parent_comment")
     private Comentario parentComment;

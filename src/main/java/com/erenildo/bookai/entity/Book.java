@@ -28,7 +28,7 @@ public class Book {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario postedBy;
+    private User postedBy;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comments = new ArrayList<>();

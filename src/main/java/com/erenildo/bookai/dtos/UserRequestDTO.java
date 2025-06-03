@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UsuarioRequestDTO {
+public class UserRequestDTO {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
@@ -17,6 +17,4 @@ public class UsuarioRequestDTO {
     @NotBlank(message = "Senha é obrigatória")
     @Size(min = 8, message = "Senha deve ter pelo menos 8 caracteres")
     private String senha;
-
-    private UserRole roles;
 }

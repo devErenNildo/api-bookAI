@@ -1,74 +1,44 @@
 package com.erenildo.bookai.entity;
 
 
+import com.erenildo.bookai.dtos.LoginRequestDTO;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
 @Data
 @Entity
-@Table(name = "usuarios")
-@NoArgsConstructor
-@AllArgsConstructor
-public class Usuario implements UserDetails {
+@Table(name = "tb_users")
+public class User {
 
     @Id
-    @Column(name = "id_usuario")
-    private String idUsuario;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
+    private UUID userId;
 
     @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false, unique = true)
-    private String login;
+    private String email;
 
     @Column(nullable = false)
     private String senha;
 
     private String foto;
 
-    private UserRole role;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    public boolean isLoginCorrect(LoginRequestDTO login, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(login.getSenha(), this.senha);
     }
 
-    @Override
-    public String getPassword() {
-        return senha;
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

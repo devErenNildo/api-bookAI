@@ -1,47 +1,32 @@
 package com.erenildo.bookai.controller;
 
 import com.erenildo.bookai.dtos.CadastroSecessoDTO;
-import com.erenildo.bookai.dtos.JwtResponseDTO;
 import com.erenildo.bookai.dtos.LoginRequestDTO;
-import com.erenildo.bookai.dtos.UsuarioRequestDTO;
-import com.erenildo.bookai.entity.Usuario;
+import com.erenildo.bookai.dtos.LoginResponseDTO;
+import com.erenildo.bookai.dtos.UserRequestDTO;
 import com.erenildo.bookai.security.TokenService;
-import com.erenildo.bookai.service.UsuarioService;
+import com.erenildo.bookai.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UsuarioService usuarioService;
-    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     private final TokenService tokenService;
 
-    @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login (@RequestBody @Valid LoginRequestDTO dto) {
-        UsernamePasswordAuthenticationToken usename =
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
-
-        Authentication auth =
-                this.authenticationManager.authenticate(usename);
-
-        String token = tokenService.generateToken((Usuario) auth.getPrincipal());
-        return ResponseEntity.ok(new JwtResponseDTO(token));
+    @PostMapping("/create")
+    public ResponseEntity<CadastroSecessoDTO> registerUser(@RequestBody @Valid UserRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.cadastrarUsuario(dto));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<CadastroSecessoDTO> cadastrar(@RequestBody @Valid UsuarioRequestDTO usuario) {
-        return usuarioService.cadastro(usuario);
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login (@RequestBody @Valid LoginRequestDTO dto) {
+        return ResponseEntity.ok().body(tokenService.generateToken(dto));
     }
 }
