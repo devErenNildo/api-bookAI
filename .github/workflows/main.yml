@@ -20,6 +20,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Criar arquivos rsa
+      run: |
+        echo "${{ RSA_PRIVATE_KEY }}" > src/main/resources/app.key
+        echo "${{ RSA_PUBLIC_KEY }}" > src/main/resources/app.pub
+
     - name: Build com Maven
       run: mvn clean package -DskipTests
 
