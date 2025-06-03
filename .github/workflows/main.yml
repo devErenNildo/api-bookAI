@@ -22,8 +22,8 @@ jobs:
 
     - name: Criar arquivos rsa
       run: |
-        echo "${{ RSA_PRIVATE_KEY }}" > src/main/resources/app.key
-        echo "${{ RSA_PUBLIC_KEY }}" > src/main/resources/app.pub
+        echo -e "${{ secrets.RSA_PRIVATE_KEY }}" > src/main/resources/app.key
+        echo -e "${{ secrets.RSA_PUBLIC_KEY }}" > src/main/resources/app.pub
 
     - name: Build com Maven
       run: mvn clean package -DskipTests
